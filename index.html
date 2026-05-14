@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nguyen Thanh Minh Tam — AI in Healthcare Researcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Nunito:wght@300;400;500;600&family=Caveat:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#fdf6ee;--cream2:#faf0e2;--cream3:#f5e8d5;
+      --gxl:#edf5eb;--gl:#cfe3cb;--gm:#94bf8e;--g:#6ba364;--gd:#4a7a44;
+      --pxl:#fde8ed;--pl:#f7c5d0;--pm:#e8919f;--p:#d4708a;
+      --tx:#4a3a35;--txm:#7a6a62;--txl:#b0a098;
+      --sh:rgba(106,160,100,0.15);--shp:rgba(212,112,138,0.15);
+      --fs:'Playfair Display',Georgia,serif;--fb:'Nunito',sans-serif;--fh:'Caveat',cursive;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--fb);background:var(--cream);color:var(--tx);font-weight:400;line-height:1.75;overflow-x:hidden}
+    *{cursor:none!important}
+    #cur{
+      width:28px;height:28px;
+      position:fixed;z-index:9999;pointer-events:none;
+      transform:translate(-50%,-50%) rotate(-30deg);
+      transform-origin:center center;
+      transition:transform .15s ease,filter .2s;
+      filter:drop-shadow(0 2px 4px rgba(106,160,100,.45));
+    }
+    #cur svg{width:100%;height:100%;display:block}
+    #cur.hovering{
+      transform:translate(-50%,-50%) rotate(-10deg) scale(1.35);
+      filter:drop-shadow(0 3px 8px rgba(212,112,138,.5));
+    }
+    #rng{
+      width:44px;height:44px;border-radius:50%;
+      border:1.5px solid rgba(148,191,142,.5);
+      position:fixed;z-index:9998;pointer-events:none;
+      transform:translate(-50%,-50%);
+      transition:border-color .3s, transform .08s linear;
+    }
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--gl);border-radius:10px}
+    .lbg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .lf{position:absolute;opacity:0;animation:lfall linear infinite}
+    @keyframes lfall{0%{transform:translateY(-60px) rotate(0deg) translateX(0);opacity:0}10%{opacity:.55}85%{opacity:.4}100%{transform:translateY(105vh) rotate(360deg) translateX(40px);opacity:0}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3.5rem;background:rgba(253,246,238,.85);backdrop-filter:blur(18px);border-bottom:1.5px solid var(--gl)}
+    .nlogo{font-family:var(--fh);font-size:1.5rem;color:var(--gd);text-decoration:none}
+    .nlogo span{color:var(--p)}
+    .nlinks{display:flex;gap:2.2rem;list-style:none;align-items:center}
+    .nlinks a{font-size:.85rem;font-weight:500;color:var(--txm);text-decoration:none;letter-spacing:.04em;position:relative;transition:color .3s}
+    .nlinks a::after{content:'✿';position:absolute;bottom:-14px;left:50%;transform:translateX(-50%) scale(0);font-size:.6rem;color:var(--pm);transition:transform .25s}
+    .nlinks a:hover{color:var(--gd)}.nlinks a:hover::after{transform:translateX(-50%) scale(1)}
+    .wdiv{line-height:0;overflow:hidden}.wdiv svg{display:block;width:100%}
+    #hero{min-height:100vh;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:7rem 4rem 4rem;gap:3rem;background:linear-gradient(135deg,var(--cream) 0%,var(--gxl) 50%,var(--pxl) 100%)}
+    #hero::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(207,227,203,.5),transparent 70%);top:-100px;right:-100px;pointer-events:none}
+    #hero::after{content:'';position:absolute;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(247,197,208,.4),transparent 70%);bottom:0;left:100px;pointer-events:none}
+    .hl{position:relative;z-index:2}
+    .hg{font-family:var(--fh);font-size:1.3rem;color:var(--gd);margin-bottom:.5rem;opacity:0;animation:pu .7s .2s forwards}
+    .hn{font-family:var(--fs);font-size:clamp(2.5rem,4.8vw,4.2rem);font-weight:500;line-height:1.08;margin-bottom:.8rem;opacity:0;animation:pu .8s .35s forwards}
+    .hn em{font-style:italic;color:var(--gd)}.hn span{color:var(--p)}
+    .hr{display:inline-flex;align-items:center;gap:.5rem;background:white;border:1.5px solid var(--gl);border-radius:50px;padding:.4rem 1.2rem;font-size:.85rem;color:var(--txm);margin-bottom:1.5rem;opacity:0;animation:pu .8s .5s forwards;box-shadow:0 4px 16px var(--sh)}
+    .rd{width:7px;height:7px;background:var(--gm);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(107,163,100,.4)}50%{box-shadow:0 0 0 6px transparent}}
+    .hd{font-size:.97rem;color:var(--txm);max-width:440px;margin-bottom:2rem;opacity:0;animation:pu .8s .65s forwards}
+    .hcta{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:pu .8s .8s forwards}
+    .btn{padding:.75rem 1.8rem;border-radius:50px;font-family:var(--fb);font-size:.87rem;font-weight:600;text-decoration:none;border:none;transition:all .3s;letter-spacing:.02em}
+    .btg{background:var(--g);color:white;box-shadow:0 6px 20px rgba(107,163,100,.35)}.btg:hover{background:var(--gd);transform:translateY(-3px)}
+    .btp{background:white;color:var(--p);border:1.5px solid var(--pl);box-shadow:0 4px 16px var(--shp)}.btp:hover{background:var(--pxl);transform:translateY(-3px)}
+    .hrgt{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.5rem;opacity:0;animation:pu .9s 1s forwards}
+    .pframe{position:relative;width:300px}
+    .pblob{width:300px;height:340px;border-radius:60% 40% 55% 45%/50% 60% 40% 50%;background:linear-gradient(135deg,var(--gl),var(--pl));display:flex;align-items:center;justify-content:center;overflow:hidden;animation:mb 8s ease-in-out infinite;box-shadow:0 20px 60px var(--sh),0 0 0 8px rgba(255,255,255,.5)}
+    @keyframes mb{0%,100%{border-radius:60% 40% 55% 45%/50% 60% 40% 50%}33%{border-radius:40% 60% 45% 55%/60% 40% 60% 40%}66%{border-radius:55% 45% 40% 60%/40% 55% 45% 60%}}
+    .pblob img{width:100%;height:100%;object-fit:cover}
+    .pph{display:flex;flex-direction:column;align-items:center;gap:.75rem;color:var(--gd);opacity:.7}
+    .pph span{font-family:var(--fh);font-size:1rem}
+    .bf{position:absolute;background:white;border-radius:16px;padding:.5rem 1rem;font-size:.78rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.1);display:flex;align-items:center;gap:.4rem;animation:fb 4s ease-in-out infinite}
+    .bf:nth-child(2){top:20px;right:-20px;animation-delay:0s}.bf:nth-child(3){bottom:40px;left:-30px;animation-delay:1.5s}.bf:nth-child(4){top:155px;right:-44px;animation-delay:.8s}
+    @keyframes fb{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .bfg{color:var(--gd);border:1px solid var(--gl)}.bfp{color:var(--p);border:1px solid var(--pl)}
+    .sr{display:flex;gap:.75rem}
+    .sb{width:38px;height:38px;border-radius:50%;background:white;border:1.5px solid var(--gl);display:flex;align-items:center;justify-content:center;color:var(--txm);text-decoration:none;font-size:.9rem;transition:all .3s;box-shadow:0 4px 12px var(--sh)}.sb:hover{border-color:var(--gm);color:var(--gd);transform:translateY(-3px)}
+    @keyframes pu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    .stag{font-family:var(--fh);font-size:1rem;color:var(--gd);margin-bottom:.25rem;display:block}
+    .stit{font-family:var(--fs);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:500;line-height:1.15}.stit em{font-style:italic;color:var(--p)}
+    .ssub{font-size:.93rem;color:var(--txm);margin-top:.75rem;max-width:520px}
+    .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}.rv.vis{opacity:1;transform:translateY(0)}
+    #about{position:relative;z-index:1;padding:5rem 4rem 6rem;background:var(--cream2);display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center}
+    .atx h3{font-family:var(--fs);font-size:1.4rem;font-weight:500;margin:1.5rem 0 .75rem;color:var(--gd)}
+    .atx p{color:var(--txm);font-size:.95rem;margin-bottom:1rem}
+    .aq{margin:1.5rem 0;padding:1rem 1.5rem;border-left:3px solid var(--pm);background:var(--pxl);border-radius:0 12px 12px 0;font-family:var(--fb);font-size:1.15rem;color:var(--p)}
+    .chip{padding:.35rem .9rem;border-radius:50px;font-size:.78rem;font-weight:600;letter-spacing:.03em}
+    .cg{background:var(--gxl);color:var(--gd);border:1px solid var(--gl)}.cp{background:var(--pxl);color:var(--p);border:1px solid var(--pl)}
+    .sc{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.25rem}
+    .acs{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .ac{background:white;border-radius:20px;padding:1.5rem 1.25rem;text-align:center;border:1.5px solid var(--gl);box-shadow:0 4px 20px var(--sh);transition:transform .3s,box-shadow .3s}.ac:hover{transform:translateY(-5px);box-shadow:0 12px 32px var(--sh)}
+    .an{font-family:var(--fs);font-size:2.4rem;font-weight:500;color:var(--g);line-height:1;margin-bottom:.25rem}
+    .al{font-size:.8rem;color:var(--txm)}
+    .ac:nth-child(2) .an{color:var(--p)}.ac:nth-child(2){border-color:var(--pl);box-shadow:0 4px 20px var(--shp)}
+    .cl{margin-top:1.5rem;display:flex;flex-direction:column;gap:.75rem}
+    .ci{display:flex;align-items:center;gap:.75rem;font-size:.88rem;color:var(--txm)}
+    .cico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .cig{background:var(--gxl);border:1px solid var(--gl)}.cip{background:var(--pxl);border:1px solid var(--pl)}
+    .ci a{color:var(--gd);text-decoration:none;font-weight:500}.ci a:hover{color:var(--p)}
+    #publications{position:relative;z-index:1;padding:5rem 4rem 6rem;background:linear-gradient(180deg,var(--gxl) 0%,var(--cream) 100%)}
+    .pubs{display:flex;flex-direction:column;gap:1.25rem;margin-top:2.5rem}
+    .pc{background:white;border-radius:20px;padding:1.75rem 2rem;border:1.5px solid var(--gl);box-shadow:0 4px 20px var(--sh);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+    .pc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gm),var(--pm));border-radius:20px 20px 0 0}
+    .pc:hover{transform:translateY(-4px);box-shadow:0 14px 36px var(--sh)}
+    .pm2{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;flex-wrap:wrap}
+    .pb{padding:.22rem .7rem;border-radius:50px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+    .pbf{background:var(--gxl);color:var(--gd);border:1px solid var(--gl)}
+    .pbc{background:var(--pxl);color:var(--p);border:1px solid var(--pl)}
+    .pbw{background:#fff4e0;color:#b07020;border:1px solid #f0d090}
+    .pbs{background:#e8f0ff;color:#4a6bbb;border:1px solid #c5d3f5}
+    .py{font-family:var(--fh);font-size:.9rem;color:var(--txl)}
+    .ptit{font-family:var(--fs);font-size:1.05rem;font-weight:500;line-height:1.4;margin-bottom:.5rem;color:var(--tx)}
+    .pven{font-size:.83rem;color:var(--txm);font-style:italic;margin-bottom:.5rem}.pven strong{color:var(--gd);font-style:normal}
+    .pau{font-size:.8rem;color:var(--txl)}.pau strong{color:var(--p);font-weight:600}
+
+    /* ── CAROUSEL ── */
+    .carousel{position:relative;width:100%;height:100%;overflow:hidden}
+    .cslide{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:1;pointer-events:none}
+    .cslide.active{opacity:1;z-index:2;pointer-events:auto}
+    .cslide img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;cursor:zoom-in!important;z-index:2;pointer-events:auto}
+    .carr{position:absolute;top:50%;transform:translateY(-50%);z-index:10;background:rgba(255,255,255,.75);border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;color:var(--gd);display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+    .carr:hover{background:white;transform:translateY(-50%) scale(1.1)}
+    .carr-l{left:10px}.carr-r{right:10px}
+    .cdots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
+    .cdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);transition:all .3s;border:1.5px solid rgba(255,255,255,.8)}
+    .cdot.active{background:white;transform:scale(1.2)}
+    .vp{border:none;z-index:10}
+    #conferences{position:relative;z-index:1;padding:5rem 4rem 6rem;background:var(--cream2)}
+    .cmosaic{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:220px;gap:1.25rem}
+    .cc:nth-child(1){grid-column:span 2}.cc:nth-child(4){grid-column:span 2}
+    .cc{border-radius:20px;overflow:hidden;position:relative;cursor:pointer;border:1.5px solid var(--gl);box-shadow:0 4px 20px var(--sh);transition:transform .35s,box-shadow .35s}.cc:hover{transform:scale(1.02);box-shadow:0 14px 40px var(--sh)}
+    .cm{width:100%;height:100%;background:linear-gradient(135deg,var(--gl),var(--pl));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .cm img{width:100%;height:100%;object-fit:cover;transition:transform .5s}.cc:hover .cm img{transform:scale(1.06)}
+    .cph{position:absolute;left:1rem;bottom:1rem;z-index:4;display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;color:white;opacity:1;font-family:var(--fb);font-size:.95rem;pointer-events:none;max-width:calc(100% - 2rem);text-align:left;line-height:1.2}
+    .co{position:absolute;inset:0;background:linear-gradient(to top,rgba(74,58,53,.75) 0%,transparent 50%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;pointer-events:none}
+    .cy{font-family:var(--fh);font-size:.9rem;color:rgba(255,255,255,.75);margin-bottom:.2rem}
+    .cn{font-family:var(--fs);font-size:1.1rem;color:white;font-weight:500}
+    .cloc{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:.2rem}
+    .vp{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.9);color:var(--p);font-size:.7rem;font-weight:700;padding:.25rem .65rem;border-radius:50px;display:flex;align-items:center;gap:.3rem;letter-spacing:.05em}
+    .mbg{position:fixed;inset:0;z-index:200;background:rgba(74,58,53,.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}.mbg.open{opacity:1;pointer-events:all}
+    .mbox{width:min(780px,90vw);background:white;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.3);transform:scale(.95);transition:transform .3s}.mbg.open .mbox{transform:scale(1)}
+    .mhdr{padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid var(--gl);background:var(--gxl)}
+    .mht{font-family:var(--fs);font-size:1.1rem;color:var(--gd)}
+    .mx{border:none;background:white;border-radius:50%;width:32px;height:32px;color:var(--txm);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.1)}.mx:hover{background:var(--pxl);color:var(--p)}
+    .mvid{aspect-ratio:16/9;background:#000}.mvid iframe{width:100%;height:100%;border:none}
+    #interests{position:relative;z-index:1;padding:5rem 4rem 6rem;background:linear-gradient(180deg,var(--pxl) 0%,var(--cream) 100%)}
+    .hg2{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem}
+    .hc{background:white;border-radius:24px;padding:2rem 1.5rem;border:1.5px solid var(--pl);box-shadow:0 4px 20px var(--shp);text-align:center;transition:transform .35s,box-shadow .35s;position:relative;overflow:hidden}
+    .hc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pm),var(--gm));transform:scaleX(0);transition:transform .4s;border-radius:0 0 24px 24px}
+    .hc:hover{transform:translateY(-6px);box-shadow:0 16px 40px var(--shp)}.hc:hover::after{transform:scaleX(1)}
+    .hi{font-size:2.4rem;margin-bottom:.75rem;display:block}
+    .hn2{font-family:var(--fs);font-size:1.15rem;font-weight:500;margin-bottom:.5rem}
+    .hd2{font-size:.84rem;color:var(--txm);line-height:1.6}
+    footer{position:relative;z-index:1;background:var(--cream3);border-top:1.5px solid var(--gl);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .fn{font-family:var(--fh);font-size:1.3rem;color:var(--gd)}.fc{font-size:.8rem;color:var(--txl);margin-top:.15rem}
+    .fs2{display:flex;gap:.65rem}
+    .fs{width:36px;height:36px;border-radius:50%;background:white;border:1.5px solid var(--gl);display:flex;align-items:center;justify-content:center;color:var(--txm);text-decoration:none;font-size:.85rem;transition:all .3s;box-shadow:0 2px 10px var(--sh)}.fs:hover{border-color:var(--pm);color:var(--p);transform:translateY(-2px)}
+    @media(max-width:900px){nav{padding:1rem 1.5rem}.nlinks{display:none}#hero{grid-template-columns:1fr;padding:7rem 1.5rem 3rem;gap:2.5rem}.hrgt{order:-1}.pblob{width:240px;height:280px}#about{grid-template-columns:1fr;padding:4rem 1.5rem;gap:2.5rem}.acs{grid-template-columns:repeat(4,1fr)}#publications,#conferences,#interests{padding:4rem 1.5rem 5rem}.cmosaic{grid-template-columns:1fr 1fr;grid-auto-rows:180px}.cc:nth-child(1),.cc:nth-child(4){grid-column:span 1}.hg2{grid-template-columns:1fr 1fr}footer{padding:2rem 1.5rem}}
+    @media(max-width:560px){.acs{grid-template-columns:1fr 1fr}.hg2{grid-template-columns:1fr}.cmosaic{grid-template-columns:1fr}.cc:nth-child(1),.cc:nth-child(4){grid-column:span 1}}
+  
+    /* ── LIGHTBOX ── */
+    .lb-overlay{position:fixed;inset:0;z-index:300;background:rgba(30,20,18,.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+    .lb-overlay.open{opacity:1;pointer-events:all}
+    .lb-img-wrap{position:relative;max-width:92vw;max-height:88vh;display:flex;align-items:center;justify-content:center}
+    .lb-img-wrap img{max-width:92vw;max-height:82vh;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.6);object-fit:contain;display:block;animation:lbIn .3s ease}
+    @keyframes lbIn{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+    .lb-close{position:absolute;top:-44px;right:0;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:50%;width:36px;height:36px;color:white;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .lb-close:hover{background:var(--p);border-color:var(--p)}
+    .lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:50%;width:44px;height:44px;color:white;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .lb-prev{left:-56px}.lb-next{right:-56px}
+    .lb-prev:hover,.lb-next:hover{background:rgba(255,255,255,.3)}
+    .lb-counter{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-family:var(--fh);font-size:1rem;white-space:nowrap}
+    .lb-caption{position:absolute;bottom:-58px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.75);font-family:var(--fh);font-size:1rem;white-space:nowrap}
+    /* make carousel images clickable */
+    .cslide img{cursor:zoom-in!important}
+
+  </style>
+</head>
+<body>
+<div id="cur"><svg viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 38 C16 38 2 26 2 14 C2 6 8 1 16 1 C24 1 30 6 30 14 C30 26 16 38 16 38Z" fill="#6ba364" opacity="0.92"/><path d="M16 38 C16 38 2 26 2 14 C2 6 8 1 16 1 C24 1 30 6 30 14 C30 26 16 38 16 38Z" fill="url(#clg)" opacity="0.45"/><line x1="16" y1="36" x2="16" y2="3" stroke="white" stroke-width="1" opacity="0.55"/><line x1="16" y1="12" x2="9" y2="8" stroke="white" stroke-width="0.7" opacity="0.4"/><line x1="16" y1="17" x2="7" y2="14" stroke="white" stroke-width="0.7" opacity="0.4"/><line x1="16" y1="22" x2="7" y2="20" stroke="white" stroke-width="0.7" opacity="0.4"/><line x1="16" y1="12" x2="23" y2="8" stroke="white" stroke-width="0.7" opacity="0.4"/><line x1="16" y1="17" x2="25" y2="14" stroke="white" stroke-width="0.7" opacity="0.4"/><line x1="16" y1="22" x2="25" y2="20" stroke="white" stroke-width="0.7" opacity="0.4"/><defs><linearGradient id="clg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs></svg></div><div id="rng"></div>
+<div class="lbg" id="lbg"></div>
+
+<nav>
+  <a href="#hero" class="nlogo">Minh <span>Tam ✿</span></a>
+  <ul class="nlinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#publications">Research</a></li>
+    <li><a href="#conferences">Conferences</a></li>
+    <li><a href="#interests">Interests</a></li>
+    <li><a href="mailto:minhtam.ngynt@gmail.com" class="btn btg" style="padding:.45rem 1.2rem;font-size:.82rem;">Contact ✉</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hl">
+    <p class="hg">✦ Hello, I'm</p>
+    <h1 class="hn">Nguyen Thanh<br/><em>Minh Tam</em><span>✿</span></h1>
+    <div class="hr"><div class="rd"></div>B.S. Candidate in IT · Thang Long University · Hanoi, Vietnam</div>
+    <p class="hd">I research <strong style="color:var(--gd)">Artificial Intelligence in Healthcare</strong> — focusing on <strong style="color:var(--p)">Medical Image Analysis</strong> and <strong style="color:var(--gd)">Explainable AI (XAI)</strong>, building transparent diagnostic systems clinicians can trust.</p>
+    <div class="hcta">
+      <a href="#publications" class="btn btg">🌿 View Research</a>
+      <a href="Nguyen_Thanh_MinhTam_CV.docx" class="btn btp" download>Download CV 🌸</a>
+    </div>
+  </div>
+  <div class="hrgt">
+    <div class="pframe">
+      <div class="pblob">
+        <!-- Replace: <img src="assets/photo.jpg" alt="Nguyen Thanh Minh Tam"/> -->
+        <img src="assets/photo.jpg" alt="Nguyen Thanh Minh Tam"/>
+        </div>
+      <div class="bf bfg">🎓 B.S. Candidate 2026</div>
+      <div class="bf bfp">🏆 Special Excellence Award</div>
+      <div class="bf bfg">📄 3× First Author · Scopus</div>
+    </div>
+    <div class="sr">
+      <a href="https://github.com/minhtamngynt-art" target="_blank" class="sb" title="GitHub"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      <a href="mailto:minhtam.ngynt@gmail.com" class="sb" title="Email">✉️</a>
+    </div>
+  </div>
+</section>
+
+<div class="wdiv" style="background:var(--cream2);margin-top:-2px;"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" height="60"><path d="M0,30 C360,60 1080,0 1440,30 L1440,0 L0,0 Z" fill="var(--cream)" opacity=".9"/><path d="M0,40 C400,10 1000,55 1440,20 L1440,0 L0,0 Z" fill="var(--gxl)" opacity=".5"/></svg></div>
+
+<section id="about">
+  <div class="atx rv">
+    <span class="stag">🌿 About Me</span>
+    <h2 class="stit">A little bit <em>about me</em></h2>
+    <div class="aq">"I believe AI should not just predict — it should explain, so clinicians can truly trust it." 🌸</div>
+    <h3>Background &amp; Research</h3>
+    <p>I'm a final-year B.S. student in Information Technology at <strong>Thang Long University, Hanoi</strong>, graduating July 2026 with GPA 3.2+/4.0 and a perfect thesis score of <strong>10/10</strong> on deep learning for diabetic retinopathy diagnosis.</p>
+    <p>My work spans <em>medical image classification</em>, <em>Explainable AI (XAI)</em>, and <em>prototype-based reasoning</em>. I collaborate internationally with the University of Cincinnati and UTEP (USA), and work closely with ophthalmologists at Da Nang Eye Hospital and Viet Duc Hospital, Hanoi.</p>
+    <p>I presented first-authored papers at <strong style="color:var(--gd)">three Scopus-indexed international venues</strong> within two years as an undergraduate, and received the <strong style="color:var(--p)">Special Excellence Award (Above 1st Place)</strong> at Thang Long University's research competition.</p>
+    <div class="sc">
+      <span class="chip cg">🧠 Deep Learning</span><span class="chip cp">👁️ Medical Imaging</span>
+      <span class="chip cg">🔍 Explainable AI</span><span class="chip cp">📊 Grad-CAM · LIME</span>
+      <span class="chip cg">🤖 PyTorch · TensorFlow</span><span class="chip cp">Python · OpenCV</span>
+      <span class="chip cg">Git · Google Colab</span>
+    </div>
+    <div class="cl" style="margin-top:2rem;">
+      <div class="ci"><div class="cico cig">📧</div><a href="mailto:minhtam.ngynt@gmail.com">minhtam.ngynt@gmail.com</a></div>
+      <div class="ci"><div class="cico cip">🏛️</div><span>Faculty of IT, Thang Long University, Hanoi, Vietnam</span></div>
+      <div class="ci"><div class="cico cig">🔬</div><span>Adviser: Assoc. Prof. Dr. Nguyen Hoang Phuong</span></div>
+      <div class="ci"><div class="cico cip">🌐</div><span>Collaborator — Univ. of Cincinnati &amp; UTEP, USA</span></div>
+    </div>
+  </div>
+  <div class="acs rv" style="align-self:start;position:sticky;top:7rem;">
+    <div class="ac"><div class="an">5</div><div class="al">📄 Publications &amp; Submissions</div></div>
+    <div class="ac"><div class="an">4</div><div class="al">🌏 Intl. Conferences</div></div>
+    <div class="ac" style="border-color:var(--gl)"><div class="an" style="color:var(--g)">3</div><div class="al">🏆 Research Projects (PI)</div></div>
+    <div class="ac" style="border-color:var(--pl)"><div class="an" style="color:var(--p)">10<span style="font-size:1.2rem">/10</span></div><div class="al">⭐ Thesis Score</div></div>
+  </div>
+</section>
+
+<div class="wdiv" style="background:linear-gradient(180deg,var(--gxl),var(--cream));margin-top:-2px;"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" height="60"><path d="M0,20 C500,55 900,5 1440,40 L1440,0 L0,0 Z" fill="var(--cream2)"/></svg></div>
+
+<section id="publications">
+  <div class="rv">
+    <span class="stag">🔬 Publications &amp; Research</span>
+    <h2 class="stit">My <em>Research Work</em></h2>
+    <p class="ssub">Peer-reviewed papers, collaborative projects, and ongoing investigations in AI for healthcare.</p>
+    <a href="https://drive.google.com/drive/u/0/folders/1-hpAHe17_kjRJd441aNBSOUWU3FpnGoP" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.6rem;margin-top:1.25rem;padding:.6rem 1.4rem;background:white;border:1.5px solid var(--gl);border-radius:50px;color:var(--gd);font-size:.85rem;font-weight:600;text-decoration:none;box-shadow:0 4px 16px var(--sh);transition:all .3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px var(--sh)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px var(--sh)'"><svg width="18" height="18" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3L27.5 53H0c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="M43.65 25L29.9 1.2C28.55 2 27.4 3.1 26.6 4.5L1.2 48.5C.4 49.9 0 51.45 0 53h27.5z" fill="#00ac47"/><path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8l5.85 11.65z" fill="#ea4335"/><path d="M43.65 25L57.4 1.2C56.05.4 54.5 0 52.9 0H34.4c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="M59.8 53H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="M73.4 26.5l-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25 59.8 53h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>Click to see all my papers on Google Drive</a>
+  </div>
+  <div class="pubs">
+
+    <div class="pc rv">
+      <div class="pm2"><span class="pb pbf">First Author</span><span class="pb pbs">Scopus</span><span class="pb pbf" style="background:var(--gxl)">Presented ✓</span><span class="py">🌿 2025</span></div>
+      <div class="ptit">Deep Learning for Detecting Diabetic Retinopathy</div>
+      <div class="pven"><strong>IFSA-NAFIPS 2025</strong> · IFSA World Congress – NAFIPS Annual Meeting · Banff, Alberta, Canada · Aug 16–19, 2025 · Springer</div>
+      <div class="pau"><strong>Nguyen Thanh Minh Tam</strong>, Nguyen Hoang Phuong</div>
+    </div>
+
+    <div class="pc rv">
+      <div class="pm2"><span class="pb pbf">First Author</span><span class="pb pbs">Scopus</span><span class="pb pbf" style="background:var(--gxl)">Presented ✓</span><span class="py">🌸 Jan 2026</span></div>
+      <div class="ptit">Performance Evaluation and Explainability Assessment of Deep Learning Architectures for Age-Related Macular Degeneration Diagnosis in OCT Images</div>
+      <div class="pven"><strong>AICI 2026</strong> · 7th Intl. Conference on AI and Computational Intelligence · Hanoi, Vietnam · Jan 4–5, 2026 · Springer</div>
+      <div class="pau"><strong>Nguyen Thanh Minh Tam</strong>, Nguyen Hoang Phuong, Vladik Kreinovich, Tri Nguyen, Kelly Cohen</div>
+    </div>
+
+    <div class="pc rv">
+      <div class="pm2"><span class="pb pbf">First Author</span><span class="pb pbs">Scopus</span><span class="pb pbf" style="background:var(--gxl)">Presented ✓ · Certificate</span><span class="py">🌿 Apr 2026</span></div>
+      <div class="ptit">Beyond Accuracy: Comparison of ResNet50 and GWN-Enhanced Models for Brain Tumor MRI Classification with LIME Visualization</div>
+      <div class="pven"><strong>ICTIS 2026</strong> · 11th Intl. Conference on ICT for Intelligent Systems · Bangkok, Thailand · Apr 9–11, 2026 · Springer</div>
+      <div class="pau"><strong>Nguyen Thanh Minh Tam</strong>, Mai Nhu Yen, Nguyen Quang Huy, Nguyen Thi Nhung, Nguyen Thi Huyen Chau, Nguyen Hoang Phuong, Dong Van He, Bui Xuan Cuong, Vladik Kreinovich</div>
+    </div>
+
+    <div class="pc rv">
+      <div class="pm2"><span class="pb pbc">Co-Author</span><span class="pb pbs">Scopus</span><span class="pb pbw">Under Review</span><span class="py">🌸 2026</span></div>
+      <div class="ptit">Prototype-Based Explanations for Deep Neural Networks for the Classification of Brain Tumor Images</div>
+      <div class="pven"><strong>CGI 2026</strong> · Computer Graphics International · London, UK · Jul 6–10, 2026 · Springer</div>
+      <div class="pau">Nguyen Quang Huy, Nguyen Thi Nhung, <strong>Nguyen Thanh Minh Tam</strong>, Nguyen Thi Huyen Chau, Nguyen Hoang Phuong, Dong Van He, Bui Xuan Cuong</div>
+    </div>
+
+    <div class="pc rv">
+      <div class="pm2"><span class="pb pbc">Co-Author</span><span class="pb pbw">Under Review · Journal Q2–Q3</span><span class="py">🌿 2026</span></div>
+      <div class="ptit">Ensemble of Convolutional Neural Networks for Classification of Breast Cancer in X-Ray Images</div>
+      <div class="pven"><strong>Computer Methods in Biomechanics and Biomedical Engineering: Imaging &amp; Visualization</strong> · Taylor &amp; Francis</div>
+      <div class="pau">Nguyen Hoang Phuong, Ha Manh Toan, <strong>Nguyen Thanh Minh Tam</strong> et al.</div>
+    </div>
+
+    <div class="pc rv" style="border-color:var(--pl);border-style:dashed;">
+      <div class="pm2"><span class="pb pbf">First Author</span><span class="pb pbw">Work in Progress</span><span class="py">🌱 2026</span></div>
+      <div class="ptit">A Prototypical Interpretability Approach Using Earth Mover's Distance and Correlation for Medical Image Classification</div>
+      <div class="pven">Manuscript in preparation · Extends "This Looks Like That" with EMD-correlation similarity for prototype-based clinical explanations</div>
+      <div class="pau"><strong>Nguyen Thanh Minh Tam</strong> et al.</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="wdiv" style="background:var(--cream2);margin-top:-2px;"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" height="60"><path d="M0,40 C360,10 1080,55 1440,15 L1440,0 L0,0 Z" fill="var(--cream)"/><path d="M0,25 C450,50 950,10 1440,35 L1440,0 L0,0 Z" fill="var(--gxl)" opacity=".5"/></svg></div>
+
+<section id="conferences">
+  <div class="rv" style="margin-bottom:2.5rem;">
+    <span class="stag">✈️ Conferences &amp; Talks</span>
+    <h2 class="stit">Places I've <em>presented</em></h2>
+    <p class="ssub">🖼️ Click for full length picture &nbsp;·&nbsp; 🎬 Click video button to watch presentation</p>
+  </div>
+  <div class="cmosaic">
+
+    <!-- ══ IFSA-NAFIPS 2025 — nhiều ảnh + video Google Drive ══ -->
+    <div class="cc rv" style="grid-column:span 2;">
+      <div class="carousel" id="car0">
+        <div class="cslide active" style="background:linear-gradient(135deg,#b5d4b0,#f0c8d4);">
+          <img src="assets/conf/banff.jpg" alt="Breathtaking view of Banff, Canada"/> 
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Breathtaking view of Banff, Canada</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#cfe3cb,#b5d4b0);">
+          <img src="assets/conf/ifsa3.jpg" alt="After the presentation"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>After the presentation</span></div>
+        </div>
+          <div class="cslide" style="background:linear-gradient(135deg,#cfe3cb,#b5d4b0);">
+          <img src="assets/conf/ifsa2.jpg" alt="Picture with Professor from Seoul University"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Picture with Professor from Seoul University</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#f0c8d4,#fde8ed);">
+          <img src="assets/conf/ifsa2025.jpg" alt="Gala dinner"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Gala dinner with Prof. Kelly Cohen</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#f0c8d4,#fde8ed);">
+          <img src="assets/conf/ifsa4.jpg" alt="Gala dinner"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Gala dinner with Prof. Uzay Kaymak</span></div>
+        </div>
+        <button class="carr carr-l" onclick="slideC('car0',-1,event)">&#8249;</button>
+        <button class="carr carr-r" onclick="slideC('car0', 1,event)">&#8250;</button>
+        <div class="cdots" id="dots0">
+          <span class="cdot active" onclick="goSlide('car0',0,event)"></span>
+          <span class="cdot" onclick="goSlide('car0',1,event)"></span>
+          <span class="cdot" onclick="goSlide('car0',2,event)"></span>
+        </div>
+      </div>
+      <a class="vp" href="https://www.youtube.com/watch?v=eNrCDuYCeQE" target="_blank" rel="noopener" onclick="event.stopPropagation()">🎬 Video</a>
+    </div>
+
+    <!-- ══ ICTIS 2026 — 1 ảnh ══ -->
+    <div class="cc rv">
+      <div class="carousel" id="car1">
+        <div class="cslide active" style="background:linear-gradient(135deg,#f7c5d0,#cfe3cb);">
+          <img src="assets/conf/cer.ictis.jpg" alt="ICTIS 2026"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>ICTIS 2026</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AICI 2026 — nhiều ảnh + YouTube ══ -->
+    <div class="cc rv" style="grid-row:span 2;">
+      <div class="carousel" id="car2" style="height:100%;">
+        <div class="cslide active" style="background:linear-gradient(160deg,var(--gm),var(--pm));">
+          <img src="assets/conf/aici2026.jpg" alt="AICI 2026"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>AICI 2026</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(160deg,var(--pm),var(--gl));">
+          <img src="assets/conf/aici2025.jpg" alt="AICI 2025"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>AICI 2025</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(160deg,var(--pm),var(--gl));">
+          <img src="assets/conf/aici2025.2.jpg" alt="AICI 2025 lunch break"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>AICI 2025 lunch break</span></div>
+        </div>
+        <button class="carr carr-l" onclick="slideC('car2',-1,event)">&#8249;</button>
+        <button class="carr carr-r" onclick="slideC('car2', 1,event)">&#8250;</button>
+        <div class="cdots" id="dots2">
+          <span class="cdot active" onclick="goSlide('car2',0,event)"></span>
+          <span class="cdot" onclick="goSlide('car2',1,event)"></span>
+        </div>
+      </div>
+      <a class="vp" href="https://www.youtube.com/watch?v=jyAJnzRN-e8" target="_blank" rel="noopener" onclick="event.stopPropagation()">🎬 Video</a>
+    </div>
+
+    <!-- ══ DigiTrans 2025 — 1 ảnh ══ -->
+    <div class="cc rv" style="grid-column:span 2;">
+      <div class="carousel" id="car3">
+        <div class="cslide active" style="background:linear-gradient(135deg,var(--gl),var(--pxl));">
+          <img src="assets/conf/digitrans.jpg" alt="DigiTrans 2025 of IT Faculty at Thang Long University"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>DigiTrans 2025</span></div>
+        </div>
+      </div>
+      <a class="vp" href="https://www.youtube.com/watch?v=Ee30jSyR9mA" target="_blank" rel="noopener" onclick="event.stopPropagation()">🎬 Video</a>
+    </div>
+
+    <!-- ══ Seminars — 3 ảnh ══ -->
+    <div class="cc rv" style="grid-column:span 2;">
+      <div class="carousel" id="car4">
+        <div class="cslide active" style="background:linear-gradient(135deg,#cfe3cb,#f0c8d4);">
+          <img src="assets/conf/seminar1.jpg" alt="Seminar 1"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Seminar 1</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#f0c8d4,#cfe3cb);">
+          <img src="assets/conf/seminar2.jpg" alt="Seminar 2"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Seminar 2</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#b5d4b0,#f0c8d4);">
+          <img src="assets/conf/seminar3.jpg" alt="Seminar 3"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Seminar 3</span></div>
+        </div>
+        <button class="carr carr-l" onclick="slideC('car4',-1,event)">&#8249;</button>
+        <button class="carr carr-r" onclick="slideC('car4', 1,event)">&#8250;</button>
+        <div class="cdots" id="dots4">
+          <span class="cdot active" onclick="goSlide('car4',0,event)"></span>
+          <span class="cdot" onclick="goSlide('car4',1,event)"></span>
+          <span class="cdot" onclick="goSlide('car4',2,event)"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Math Discussion with Prof. Vladik ══ -->
+    <div class="cc rv" style="grid-column:span 2;">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#e8f0ff 0%,#cfe3cb 50%,#fde8ed 100%);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:rgba(40,30,25,.32);"></div>
+        <div style="position:relative;z-index:2;text-align:center;color:white;padding:1.5rem;">
+          <div style="font-family:var(--fh);font-size:.95rem;opacity:.85;margin-bottom:.3rem;">🌿 A Special Moment</div>
+          <div style="font-family:var(--fs);font-size:1.15rem;font-weight:500;margin-bottom:.25rem;">Math Discussion with Prof. Vladik Kreinovich</div>
+          <div style="font-size:.78rem;opacity:.75;margin-bottom:1rem;">University of Texas at El Paso (UTEP) · USA</div>
+          <a href="https://www.youtube.com/watch?v=NqmubEpO2CI" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.88);color:var(--p);font-size:.78rem;font-weight:700;padding:.4rem 1.2rem;border-radius:50px;text-decoration:none;letter-spacing:.04em;box-shadow:0 4px 16px rgba(0,0,0,.2);">🎬 Watch Moment</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TLU, NCKH, Thesis — 3 ảnh chung ══ -->
+    <div class="cc rv">
+      <div class="carousel" id="car5">
+        <div class="cslide active" style="background:linear-gradient(135deg,#f7c5d0,#e8919f);">
+          <img src="assets/conf/tlu.jpg" alt="Thang Long University"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Thang Long University</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#e8919f,#cfe3cb);">
+          <img src="assets/conf/nckh.jpg" alt="NCKH Research"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>NCKH Research</span></div>
+        </div>
+        <div class="cslide" style="background:linear-gradient(135deg,#cfe3cb,#f7c5d0);">
+          <img src="assets/conf/thesis.jpg" alt="Thesis Work"/>
+          <div class="cph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Thesis Work</span></div>
+        </div>
+        <button class="carr carr-l" onclick="slideC('car5',-1,event)">&#8249;</button>
+        <button class="carr carr-r" onclick="slideC('car5', 1,event)">&#8250;</button>
+        <div class="cdots" id="dots5">
+          <span class="cdot active" onclick="goSlide('car5',0,event)"></span>
+          <span class="cdot" onclick="goSlide('car5',1,event)"></span>
+          <span class="cdot" onclick="goSlide('car5',2,event)"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="wdiv" style="background:linear-gradient(180deg,var(--pxl),var(--cream));margin-top:-2px;"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" height="60"><path d="M0,15 C400,50 1000,5 1440,45 L1440,0 L0,0 Z" fill="var(--cream2)"/></svg></div>
+
+<section id="interests">
+  <div class="rv" style="text-align:center;max-width:540px;margin:0 auto;">
+    <span class="stag">🌸 Beyond Research</span>
+    <h2 class="stit">Life <em>outside the lab</em></h2>
+    <p class="ssub" style="margin:0 auto;">What keeps me inspired when I'm away from the keyboard 🌿</p>
+  </div>
+  <div class="hg2">
+<div class="hc rv"><span class="hi">🩺</span><div class="hn2">Clinical Collaboration</div><p class="hd2">Organizing research seminars with ophthalmologists in Da Nang and Hanoi.</p></div>
+
+<div class="hc rv"><span class="hi">📚</span><div class="hn2">Reading</div><p class="hd2">Science, philosophy, and science fiction. Recent favourite: "The Outliers" by Malcolm Gladwell.</p></div>
+
+<div class="hc rv"><span class="hi">🏃‍♀️</span><div class="hn2">Sports</div><p class="hd2">I can spend hours in the pool and I'm also picking up pickleball.</p></div>
+
+<div class="hc rv"><span class="hi">✈️</span><div class="hn2">Travel</div><p class="hd2">Visited 16 of 25 provinces from the northwestern border to Da Nang.</p></div>
+
+<div class="hc rv"><span class="hi">🧶</span><div class="hn2">Crocheting</div><p class="hd2">Making handmade gifts for friends while reducing screen time, I love the creativity and calm it brings.</p></div>
+<div class="hc rv"><span class="hi">🍴</span><div class="hn2">Food Exploration</div><p class="hd2">Trying new dishes at local eateries — discovering flavors, stories, and culture one bite at a time.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div><div class="fn">Nguyen Thanh Minh Tam ✿</div><div class="fc">© 2026 · Thang Long University · Hanoi, Vietnam · Made with 🌸 &amp; 🌿</div></div>
+  <div class="fs2">
+    <a href="https://github.com/minhtamngynt-art" target="_blank" class="fs" title="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+    <a href="mailto:minhtam.ngynt@gmail.com" class="fs" title="Email">✉️</a>
+  </div>
+</footer>
+
+<div class="mbg" id="vm" onclick="hmc(event)"><div class="mbox"><div class="mhdr"><div class="mht" id="vt"></div><button class="mx" onclick="cv()">✕</button></div><div class="mvid"><iframe id="vi" src="" allowfullscreen></iframe></div></div></div>
+
+<script>
+const cur=document.getElementById('cur'),rng=document.getElementById('rng');
+let mx=0,my=0,rx=0,ry=0,lx=0,ly=0,rot=-30;
+document.addEventListener('mousemove',e=>{
+  lx=mx;ly=my;mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+  // rotate leaf based on movement direction
+  const dx=mx-lx,dy=my-ly;
+  if(Math.abs(dx)>1||Math.abs(dy)>1){
+    const angle=Math.atan2(dy,dx)*(180/Math.PI);
+    rot=angle-60; // offset so leaf tip points forward
+    cur.style.transform=`translate(-50%,-50%) rotate(${rot}deg)`;
+  }
+});
+// hover effect on interactive elements
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.classList.add('hovering');
+    // switch to pink leaf on hover
+    cur.querySelector('path').setAttribute('fill','#d4708a');
+    rng.style.borderColor='rgba(212,112,138,.6)';
+    rng.style.transform='translate(-50%,-50%) scale(1.3)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.classList.remove('hovering');
+    cur.querySelector('path').setAttribute('fill','#6ba364');
+    rng.style.borderColor='rgba(148,191,142,.5)';
+    rng.style.transform='translate(-50%,-50%) scale(1)';
+  });
+});
+(function t(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;rng.style.left=rx+'px';rng.style.top=ry+'px';requestAnimationFrame(t);})();
+const lbg=document.getElementById('lbg');
+const lf2=[(f,s)=>`<svg width="22" height="28" viewBox="0 0 22 28" xmlns="http://www.w3.org/2000/svg"><path d="M11 27C11 27 1 18 1 10C1 4.5 5.5 1 11 1C16.5 1 21 4.5 21 10C21 18 11 27 11 27Z" fill="${f}" opacity="0.7"/><line x1="11" y1="27" x2="11" y2="1" stroke="${s}" stroke-width="0.8" opacity="0.5"/></svg>`,(f)=>`<svg width="18" height="24" viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 23C9 23 1 15 1 9C1 4 4.5 1 9 1C13.5 1 17 4 17 9C17 15 9 23 9 23Z" fill="${f}" opacity="0.6"/></svg>`,(f)=>`<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="5" fill="${f}" opacity="0.45"/></svg>`];
+const gs2=['#94bf8e','#cfe3cb','#6ba364','#b5d4b0'],ps2=['#f7c5d0','#e8919f','#fde8ed','#d4708a'];
+for(let i=0;i<20;i++){const el=document.createElement('div');el.className='lf';const ig=Math.random()>.38;const pal=ig?gs2:ps2;const f=pal[Math.floor(Math.random()*pal.length)];const fn=lf2[Math.floor(Math.random()*lf2.length)];el.innerHTML=fn(f,gs2[1]);const sc=.4+Math.random()*.85;el.style.cssText=`left:${Math.random()*100}vw;top:-40px;transform:scale(${sc});animation-duration:${6+Math.random()*9}s;animation-delay:${-Math.random()*12}s;`;lbg.appendChild(el);}
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*80);obs.unobserve(e.target);}});},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+/* ── CAROUSEL ── */
+function slideC(id,dir,e){e&&e.stopPropagation();const car=document.getElementById(id);const slides=[...car.querySelectorAll('.cslide')];const dots=document.getElementById(id.replace('car','dots'));const cur=slides.findIndex(s=>s.classList.contains('active'));slides[cur].classList.remove('active');const next=(cur+dir+slides.length)%slides.length;slides[next].classList.add('active');if(dots){dots.querySelectorAll('.cdot').forEach((d,i)=>d.classList.toggle('active',i===next));}}
+function goSlide(id,idx,e){e&&e.stopPropagation();const car=document.getElementById(id);const slides=[...car.querySelectorAll('.cslide')];const dots=document.getElementById(id.replace('car','dots'));slides.forEach((s,i)=>s.classList.toggle('active',i===idx));if(dots)dots.querySelectorAll('.cdot').forEach((d,i)=>d.classList.toggle('active',i===idx));}
+/* ── VIDEO MODAL ── */
+function openVid(t,u,e){e&&e.stopPropagation();document.getElementById('vt').textContent=t;document.getElementById('vi').src=u;document.getElementById('vm').classList.add('open');document.body.style.overflow='hidden';}
+function cv(){document.getElementById('vm').classList.remove('open');document.getElementById('vi').src='';document.body.style.overflow='';}
+function hmc(e){if(e.target===document.getElementById('vm'))cv();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cv();});
+const nas=document.querySelectorAll('.nlinks a[href^="#"]');
+const scs=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{let c='';scs.forEach(s=>{if(window.scrollY>=s.offsetTop-200)c=s.id;});nas.forEach(a=>{a.style.color=a.getAttribute('href')===`#${c}`?'var(--gd)':'';});});
+
+/* ── LIGHTBOX ── */
+let lbImages=[],lbIdx=0;
+
+// make every .cslide img open lightbox
+function initLightbox(){
+  document.querySelectorAll('.carousel').forEach(car=>{
+    const slides=[...car.querySelectorAll('.cslide')];
+    const carId=car.id;
+    slides.forEach((slide,i)=>{
+      const img=slide.querySelector('img');
+      if(img){
+        img.addEventListener('click',e=>{
+          e.stopPropagation();
+          // collect all imgs in this carousel
+          lbImages=[...slides].map(s=>{const im=s.querySelector('img');return im?{src:im.src,alt:im.alt||''}:null;}).filter(x=>x);
+          lbIdx=lbImages.findIndex(im=>im.src===img.src);
+          openLb();
+        });
+      }
+    });
+  });
+}
+function openLb(){
+  const lb=document.getElementById('lb');
+  const lbImg=document.getElementById('lbImg');
+  const counter=document.getElementById('lbCounter');
+  const caption=document.getElementById('lbCaption');
+  lbImg.src=lbImages[lbIdx].src;
+  counter.textContent=lbImages.length>1?`${lbIdx+1} / ${lbImages.length}`:'';
+  caption.textContent=lbImages[lbIdx].alt;
+  // show/hide nav arrows
+  document.querySelector('.lb-prev').style.display=lbImages.length>1?'flex':'none';
+  document.querySelector('.lb-next').style.display=lbImages.length>1?'flex':'none';
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('open');
+  document.getElementById('lbImg').src='';
+  document.body.style.overflow='';
+}
+function lbClose(e){if(e.target===document.getElementById('lb'))closeLb();}
+function lbNav(dir,e){
+  e&&e.stopPropagation();
+  lbIdx=(lbIdx+dir+lbImages.length)%lbImages.length;
+  const lbImg=document.getElementById('lbImg');
+  lbImg.style.animation='none';
+  requestAnimationFrame(()=>{
+    lbImg.style.animation='';
+    lbImg.src=lbImages[lbIdx].src;
+    document.getElementById('lbCounter').textContent=`${lbIdx+1} / ${lbImages.length}`;
+    document.getElementById('lbCaption').textContent=lbImages[lbIdx].alt;
+  });
+}
+document.addEventListener('keydown',e=>{
+  const lb=document.getElementById('lb');
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='ArrowLeft')lbNav(-1);
+  else if(e.key==='ArrowRight')lbNav(1);
+  else if(e.key==='Escape')closeLb();
+});
+// init after DOM ready
+initLightbox();
+
+</script>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lb" onclick="lbClose(event)">
+  <div class="lb-img-wrap" id="lbWrap">
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <button class="lb-prev" onclick="lbNav(-1,event)">&#8249;</button>
+    <img id="lbImg" src="" alt=""/>
+    <button class="lb-next" onclick="lbNav(1,event)">&#8250;</button>
+    <div class="lb-counter" id="lbCounter"></div>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+</div>
+
+</body>
+</html>
