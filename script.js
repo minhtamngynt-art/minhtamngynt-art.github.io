@@ -1,0 +1,2 @@
+const box=document.querySelector('#lightbox');document.querySelectorAll('.photo-card button').forEach(b=>b.addEventListener('click',()=>{const img=b.querySelector('img');box.querySelector('img').src=img.src;box.querySelector('img').alt=img.alt;box.querySelector('p').textContent=img.alt;box.showModal()}));document.querySelector('#close-photo').addEventListener('click',()=>box.close());box.addEventListener('click',e=>{if(e.target===box)box.close()});
+

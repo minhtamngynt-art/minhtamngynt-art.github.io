@@ -1,0 +1,27 @@
+/* Dong Son drum: the supplied, unmodified PNG on a beveled 3D medallion.
+   Orthographic projection keeps the visible face exactly at the DOM spindle. */
+(()=>{
+let THREE,renderer,camera,scene,drum,halo,rim,canvas,lost=false,w=0,h=0;
+const fallback=document.querySelector('#traveler');
+const pose={x:0,y:0,size:120,rx:0,ry:0,rz:0,glow:.45,opacity:1};
+const api={ready:false,setPose(p){for(const key of Object.keys(pose))if(Number.isFinite(p[key]))pose[key]=p[key]},resize,render,get canvas(){return canvas}};window.medallionRenderer=api;
+function resize(){if(!renderer||lost)return;w=document.documentElement.clientWidth;h=innerHeight;renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setSize(w,h,false);camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix()}
+function render(){if(!api.ready||lost)return;try{if(w!==document.documentElement.clientWidth||h!==innerHeight)resize();const p=pose;drum.position.set(p.x-w/2,h/2-p.y,0);drum.scale.setScalar(p.size);drum.rotation.set(p.rx*Math.PI/180,p.ry*Math.PI/180,-p.rz*Math.PI/180);halo.position.copy(drum.position);halo.position.z=-p.size*.12;halo.scale.setScalar(p.size*2.2);halo.material.opacity=.22+Math.max(0,p.glow)*.35;rim.emissiveIntensity=.18+Math.max(0,p.glow)*.18;canvas.style.opacity=String(p.opacity);renderer.render(scene,camera);fallback.style.opacity='0';canvas.dataset.centerX=p.x.toFixed(3);canvas.dataset.centerY=p.y.toFixed(3)}catch(error){api.ready=false;canvas.style.display='none';fallback.style.opacity='1';console.warn('Using drum image fallback.',error)}}
+function texture(size,paint){const c=document.createElement('canvas');c.width=c.height=size;paint(c.getContext('2d'),size);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
+async function init(){try{
+THREE=await import('./vendor/three.module.js');canvas=document.createElement('canvas');canvas.id='medallion-canvas';canvas.setAttribute('aria-hidden','true');Object.assign(canvas.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:'15'});
+renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+scene=new THREE.Scene();camera=new THREE.OrthographicCamera(-1,1,1,-1,.1,4000);camera.position.z=1500;scene.add(new THREE.HemisphereLight(0xffedbf,0x31200d,2));const light=new THREE.DirectionalLight(0xffe3a3,4);light.position.set(-3,5,8);scene.add(light);const fill=new THREE.DirectionalLight(0xffffff,2);fill.position.set(4,-2,6);scene.add(fill);
+drum=new THREE.Group();scene.add(drum);rim=new THREE.MeshStandardMaterial({color:0xdab160,metalness:.55,roughness:.3,emissive:0x996021,emissiveIntensity:.2});
+const profile=[[0,-.032],[.472,-.032],[.492,-.021],[.5,-.009],[.5,.009],[.492,.021],[.478,.032],[0,.032]].map(p=>new THREE.Vector2(...p));const body=new THREE.Mesh(new THREE.LatheGeometry(profile,128),rim);body.rotation.x=Math.PI/2;drum.add(body);
+const supplied=await new THREE.TextureLoader().loadAsync('./assets/figma/medallion.png');supplied.colorSpace=THREE.SRGBColorSpace;supplied.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+// Figma source 800x500; frame the opaque drum at x48..741, y0..498.
+// If replacing with a tightly cropped square PNG: repeat(1,1), offset(0,0).
+supplied.repeat.set(693/800,498/500);supplied.offset.set(48/800,2/500);
+const dark=new THREE.MeshBasicMaterial({color:0x0b0905}),imageMaterial=new THREE.MeshBasicMaterial({map:supplied,transparent:true,toneMapped:false,depthWrite:false});
+for(const side of [1,-1]){const field=new THREE.Mesh(new THREE.CircleGeometry(.488,128),dark);field.position.z=side*.034;if(side<0)field.rotation.y=Math.PI;drum.add(field);const face=new THREE.Mesh(new THREE.CircleGeometry(.488,128),imageMaterial);face.position.z=side*.036;if(side<0)face.rotation.y=Math.PI;drum.add(face);const ring=new THREE.Mesh(new THREE.TorusGeometry(.493,.0045,8,128),rim);ring.position.z=side*.03;drum.add(ring)}
+const ribs=new THREE.InstancedMesh(new THREE.BoxGeometry(.004,.003,.03),rim,144),helper=new THREE.Object3D();for(let i=0;i<144;i++){const a=i/144*Math.PI*2;helper.position.set(Math.cos(a)*.499,Math.sin(a)*.499,0);helper.rotation.z=a;helper.updateMatrix();ribs.setMatrixAt(i,helper.matrix)}drum.add(ribs);
+const glow=texture(256,(ctx,s)=>{const g=ctx.createRadialGradient(s/2,s/2,s*.15,s/2,s/2,s*.5);g.addColorStop(0,'rgba(255,214,122,.65)');g.addColorStop(.38,'rgba(255,185,64,.45)');g.addColorStop(.7,'rgba(222,130,27,.15)');g.addColorStop(1,'rgba(222,130,27,0)');ctx.fillStyle=g;ctx.fillRect(0,0,s,s)});halo=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:glow,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(halo);
+resize();document.body.append(canvas);canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();lost=true;api.ready=false;canvas.style.display='none';fallback.style.opacity='1'});canvas.addEventListener('webglcontextrestored',()=>{lost=false;api.ready=true;canvas.style.display='block';resize();document.dispatchEvent(new CustomEvent('medallion-ready'))});api.ready=true;document.dispatchEvent(new CustomEvent('medallion-ready'));
+}catch(error){canvas?.remove();renderer?.dispose();fallback.style.opacity='1';console.warn('Using drum image fallback.',error)}}init();
+})();

@@ -1,0 +1,247 @@
+/* FILE TỰ CHỈNH: được nạp cuối, ưu tiên hơn các CSS cũ.
+   Desktop dùng khung Figma 1440 × 1200, thu phóng đồng đều.
+   Bố cục/nội dung About → Notes giữ nguyên; trang trí hoa lá nằm cuối file. */
+@import url('https://fonts.googleapis.com/css2?family=Manuale:wght@400&family=Playfair+Display:wght@400;600;700&family=Inter:wght@200;300&family=Inria+Serif:ital,wght@1,400&family=Oranienbaum&family=Orelega+One&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap');
+
+:root {
+  --design-unit: min(.06944444vw, .08333333svh); /* 1 px Figma */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-wordmark: 'Manuale', serif;
+  --font-scroll: 'Inria Serif', serif;
+  --nav-line-y: 116; /* y trong Figma */
+  --pillar-left: url('assets/figma/pillar-left.png');
+  --pillar-right: url('assets/figma/pillar-right.png');
+  --record-image: url('assets/figma/record.png');
+  --turntable-image: url('assets/figma/turntable.png');
+  --needle-image: url('assets/figma/needle.png');
+  --silk-opacity: .6; /* Figma VẢI ĐỎ 1 */
+  --vinyl-opacity: .8; /* Figma MEDALLION group, applied once */
+  --scene-background: linear-gradient(90.449deg,#510307 27.951%,#1a1615 132.36%);
+  --flower-opacity: .6; /* Hoa lá mới: cân độ đậm với nền Figma; không phải layer đo từ file gốc */
+  --flower-mobile-opacity: .22; /* Nhẹ hơn trên điện thoại để không lẫn vào chữ */
+  --seal-glow: .75; /* Glow con dấu cuối; giữ cố định trên lá thư */
+  --pillar-opacity: .6; /* Cột trên lớp phủ tối để luôn thấy ở Home / Fall */
+}
+
+/* Tách nền/cột/lớp phủ: cột ở dưới lớp phủ tối, như thứ tự layer Figma. */
+.opening-backdrop { position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; background:var(--scene-background); }
+.opening-backdrop::before { content:''; position:absolute; left:calc(50% + (var(--sx,1.827) - 720) * var(--design-unit)); top:calc(50% + (var(--sy,-78.859) - 600) * var(--design-unit)); width:calc(var(--sw,2246.709) * var(--design-unit)); height:calc(var(--sh,1208.394) * var(--design-unit)); background:url('assets/figma/silk.png') center/100% 100% no-repeat; opacity:var(--silk-opacity); transform:rotate(calc(var(--angle,-25) * 1deg)); }
+.opening-vignette { position:fixed; inset:0; z-index:2; pointer-events:none; background:radial-gradient(ellipse calc(720 * var(--design-unit)) calc(600 * var(--design-unit)) at 50% 50%,rgb(14 14 14 / 0) 0%,#0e0e0e 100%); }
+
+/* Navbar: đường phân cách chạy hết chiều ngang. */
+.opening-nav { left:0; right:0; top:0; padding:calc(64 * var(--design-unit)) 8.05% 0; height:calc(var(--nav-line-y) * var(--design-unit)); border:0; align-items:flex-start; }
+.opening-nav::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:url('assets/figma/nav-divider.svg') center/100% 1px; }
+.opening-nav .wordmark { font:400 calc(36 * var(--design-unit))/1.05 var(--font-wordmark); }
+.opening-nav nav { gap:calc(70 * var(--design-unit)); font:400 calc(18 * var(--design-unit))/1.5 var(--font-heading); }
+.opening-nav nav a:first-child { font-weight:700; border:0; position:relative; padding-bottom:0; }
+.opening-nav nav a:first-child::after { content:''; position:absolute; width:calc(62 * var(--design-unit)); height:calc(13 * var(--design-unit)); left:50%; top:100%; transform:translateX(-50%); background:url('assets/figma/nav-active.svg') center/100% 100% no-repeat; }
+
+/* Cột gốc 724 × 2172, không dùng thumbnail 208 px. */
+.opening-columns { inset:0; }
+.opening-columns i { width:calc(378 * var(--design-unit)); height:calc(1134 * var(--design-unit)); top:calc(83 * var(--design-unit)); bottom:auto; background:var(--pillar-left) center/100% 100% no-repeat; filter:none; }
+.opening-columns i:first-child { left:calc(50% - 729 * var(--design-unit)); transform:none; }
+.opening-columns i:last-child { left:calc(50% + 270 * var(--design-unit)); right:auto; width:calc(393 * var(--design-unit)); height:calc(1178 * var(--design-unit)); top:calc(17 * var(--design-unit)); background-image:var(--pillar-right); }
+.opening-active .opening-columns i:first-child { left:calc(50% + (var(--lx,-9) - 720) * var(--design-unit)); top:calc(50% + (var(--ly,83) - 600) * var(--design-unit)); }
+.opening-active .opening-columns i:last-child { left:calc(50% + (var(--rx,990) - 720) * var(--design-unit)); top:calc(50% + (var(--ry,17) - 600) * var(--design-unit)); }
+
+/* Home: tọa độ, tỉ lệ và font đo từ Figma 137:124. */
+.cinematic .home .scene-inner { width:calc(1440 * var(--design-unit)); max-width:none; }
+.cinematic .home .hero-grid { display:block; inset:0; }
+.cinematic .home .hero-grid>div { position:absolute; left:calc(130 * var(--design-unit)); top:calc(50% - 194 * var(--design-unit)); width:calc(730 * var(--design-unit)); }
+.cinematic .home h1 { font:400 calc(100 * var(--design-unit))/1.06 var(--font-heading); letter-spacing:calc(3 * var(--design-unit)); margin:0; }
+.cinematic .home .intro { font:300 calc(24 * var(--design-unit))/1.083 var(--font-body); margin:calc(16 * var(--design-unit)) 0 0 calc(6 * var(--design-unit)); white-space:nowrap; }
+.cinematic .home h1,.cinematic .home .intro { color:#fff; }
+.cinematic .home .hero-grid .arch { position:absolute; left:calc(941 * var(--design-unit)); top:calc(50% - 292 * var(--design-unit)); width:calc(367 * var(--design-unit)); height:calc(536 * var(--design-unit)); max-height:none; max-width:none; margin:0; border:calc(14 * var(--design-unit)) solid #8d6b12; border-bottom-width:calc(19 * var(--design-unit)); border-radius:calc(230 * var(--design-unit)) calc(230 * var(--design-unit)) 0 0; }
+.cinematic .home .arch img { transform:none; object-fit:cover; object-position:50% 60%; }
+.cinematic .home .arch::after { content:''; position:absolute; left:0; right:0; bottom:0; height:15%; background:url('assets/figma/portrait-fade.svg') center/100% 100% no-repeat; pointer-events:none; }
+.cinematic .home-bottom { bottom:calc(16 * var(--design-unit)); }
+.cinematic .home-bottom>a { font:italic 400 calc(16 * var(--design-unit))/1.625 var(--font-scroll); letter-spacing:calc(1.6 * var(--design-unit)); gap:0; color:rgb(255 255 255 / .6); }
+.cinematic .home-bottom>a::after { color:inherit; }
+
+/* Exact text lives in index.html: no automatic rewriting. */
+.cinematic .fall .scene-inner { width:calc(1440 * var(--design-unit)); }
+.cinematic .fall h2 { left:calc(94 * var(--design-unit)); top:calc(50% - 305 * var(--design-unit)); max-width:none; margin:0; font:400 calc(70 * var(--design-unit))/1.3 var(--font-heading); }
+.cinematic .fall .scene-inner>p:not(.eyebrow) { left:calc(92 * var(--design-unit)); top:calc(50% - 95 * var(--design-unit)); width:calc(520 * var(--design-unit)); max-width:none; font:200 calc(24 * var(--design-unit))/1.5 var(--font-body); color:#d4cdc8; }
+.cinematic .fall h2,.cinematic .fall .scene-inner>p:not(.eyebrow) { color:#fff; }
+
+/* Vinyl: các ảnh thật từ Figma thay phần đĩa vẽ bằng gradient. */
+.cinematic .vinyl .scene-inner { width:calc(1440 * var(--design-unit)); min-height:100svh; padding:0; }
+.cinematic .vinyl .player { position:relative; display:block; width:100%; max-width:none; height:calc(1200 * var(--design-unit)); margin:auto; }
+.deck { position:absolute; left:calc(-35 * var(--design-unit)); top:calc(257 * var(--design-unit)); width:calc(937 * var(--design-unit)); height:calc(855 * var(--design-unit)); aspect-ratio:auto; padding:0; border:0; border-radius:0; background:var(--turntable-image) center/100% 100% no-repeat; box-shadow:none; }
+.deck::before,.deck::after,.deck-screw { display:none; }
+/* Figma dims the whole deck group to 80%; no extra 80% on each child. */
+.deck { opacity:var(--vinyl-opacity); }
+.cinematic .turntable { position:absolute; left:8.965%; top:4.91%; width:77.588%; height:auto; aspect-ratio:1; transform:none; }
+.cinematic .record { border:0; border-radius:50%; background:var(--record-image) 50% 46%/106% 106% no-repeat; box-shadow:none; }
+.cinematic .record::before,.cinematic .record::after,.cinematic .record-label,.record-etching { display:none; }
+.cinematic .needle { right:-29%; top:-4%; width:50%; height:92%; transform-origin:50% 10%; background:var(--needle-image) center/100% 100% no-repeat; border:0; transform:rotate(0deg); }
+.cinematic .needle span { display:none; }
+.cinematic.playing .needle { transform:rotate(22deg); }
+.cinematic .player-info { position:absolute; left:calc(886 * var(--design-unit)); top:calc(315 * var(--design-unit)); width:calc(475 * var(--design-unit)); min-height:calc(700 * var(--design-unit)); padding:calc(20 * var(--design-unit)); border:1px solid #ffffff14; border-radius:calc(32 * var(--design-unit)); background:#ffffff0a; backdrop-filter:blur(15px); }
+.cinematic .player-info .eyebrow { font:600 calc(20 * var(--design-unit))/1.3 var(--font-heading); color:#8d6b12; letter-spacing:0; }
+.cinematic .player-info>.eyebrow { opacity:.8; }
+.music-source input { background:rgb(255 255 255 / .05); border-color:rgb(255 255 255 / .15); }
+.music-source input::placeholder { color:rgb(255 255 255 / .5); opacity:1; }
+.music-source button { background:rgb(200 161 90 / .18); border-color:rgb(200 161 90 / .3); color:rgb(210 159 27 / .64); }
+.music-source input { font:calc(20 * var(--design-unit)) 'Oranienbaum',serif; min-height:calc(54 * var(--design-unit)); }
+.music-source button { font:calc(16 * var(--design-unit)) 'Orelega One',serif; min-height:calc(33 * var(--design-unit)); }
+.cinematic .player-info h3 { font:400 calc(24 * var(--design-unit))/1.2 var(--font-heading); }
+.cinematic .player-info #music-status { font:300 max(11px,calc(16 * var(--design-unit)))/1.5 var(--font-body); }
+.cinematic .player-info blockquote { display:none; }
+.cinematic .queue-heading { margin-top:20px; border-top:1px solid #fff2; padding-top:12px; letter-spacing:2px; }
+.music-queue button { font-family:var(--font-heading); }
+.drum-disc { background-image:url('assets/figma/medallion.png'); background-size:115.44% 100.4%; background-position:44.86% 0; }
+.youtube-panel { position:fixed; z-index:30; right:16px; bottom:16px; width:360px; padding:0 0 6px; background:#111; border:1px solid #9d7d37; box-shadow:0 8px 30px #0008; }
+.youtube-panel[hidden] { display:none; }
+.youtube-panel iframe,.youtube-panel #youtube-player { display:block; width:100%; height:203px; border:0; }
+.youtube-panel a { display:block; font:12px/1.5 sans-serif; color:#d7bf80; padding:4px 8px 0; }
+.youtube-panel.video-collapsed { opacity:0; pointer-events:none; }
+.video-toggle { padding:0; margin:0 0 14px; border:0; background:none; color:#c9b384; font:12px/1.5 var(--font-body); text-decoration:underline; text-underline-offset:3px; }
+.video-toggle[hidden] { display:none; }
+.close-video { position:absolute; right:0; bottom:0; border:0; background:#17110b; color:#e7ce99; width:32px; height:28px; font:22px/1 sans-serif; }
+body:has(.youtube-panel:not([hidden]):not(.video-collapsed)) .mini-player { bottom:255px; }
+
+/* One physical medallion only. Opaque matte label hides the coin baked into
+   record.png and the deck beneath it, including during takeoff/landing. */
+.cinematic .record::after { content:''; display:block; position:absolute; inset:26%; width:auto; height:auto; border-radius:50%; background:radial-gradient(circle,#17120b 0%,#11100d 80%,#211c13 100%); opacity:1; border:1px solid #a37b3538; box-shadow:none; }
+.cinematic .atmosphere { background:var(--scene-background); }
+.cinematic .atmosphere::before { opacity:calc(.19 * var(--opening-visibility,1)); }
+.cinematic .atmosphere::after { background:none; }
+/* Attach to viewport edges, not the narrow, centered Figma artboard. */
+.opening-columns { overflow:hidden; z-index:3; }
+.opening-columns i { opacity:var(--pillar-opacity); }
+.opening-columns i,.opening-columns i:last-child { width:30svh; height:90svh; }
+.opening-active .opening-columns i:first-child { left:0; top:8svh; }
+.opening-active .opening-columns i:last-child { left:auto; right:0; top:8svh; }
+
+/* About → Notes: separate high-resolution alpha assets behind existing content. */
+.botanical-decor { position:absolute; inset:0; z-index:-1; pointer-events:none; overflow:hidden; transform-origin:50% 60%; will-change:transform,opacity; }
+.botanical-decor img { position:absolute; width:clamp(190px,28vw,470px); height:auto; bottom:-3%; opacity:var(--flower-opacity); }
+.botanical-left { left:-9%; transform:scaleX(-1); }
+.botanical-right { right:-5%; }
+.about .botanical-right { width:clamp(240px,34vw,560px); right:-3%; bottom:-2%; }
+.about .botanical-left { width:clamp(200px,27vw,440px); left:-8%; bottom:0; }
+.papers .botanical-decor img { width:clamp(170px,19vw,330px); bottom:0; }
+.papers .botanical-left { left:-6%; }.papers .botanical-right { right:-6%; transform:scaleX(-1); }
+.world .botanical-decor img { width:clamp(180px,24vw,400px); }
+.world .botanical-left { left:-6%; transform:none; }.world .botanical-right { right:-6%; transform:scaleX(-1); }
+.notes .botanical-left { left:-5%; transform:none; }.notes .botanical-right { right:-8%; transform:scaleX(-1); }
+.final-drum-seal::before { content:''; position:absolute; inset:-70%; z-index:-1; border-radius:50%; opacity:var(--seal-glow); background:radial-gradient(circle,#ffd67a88 0%,#ffb94044 38%,#de821b18 65%,transparent 72%); }
+.final-drum-seal { box-shadow:2px 5px 8px #30200f77,0 0 18px #ffd984aa,0 0 45px #d58a4266; }
+
+/* Điện thoại: bố cục riêng; không ép khung desktop 1440px vào màn hình nhỏ. */
+@media(max-width:700px) {
+ :root { --design-unit: .06944444vw; }
+ .opening-nav { height:105px; padding:60px 7% 14px; }.opening-nav .wordmark{font-size:24px}
+ .opening-columns i,.opening-columns i:last-child { height:85svh; width:28.33svh; }
+ .opening-active .opening-columns i:first-child { left:-6svh;top:110px; }.opening-active .opening-columns i:last-child{left:auto;right:-6svh;top:110px}
+ .cinematic :is(.about,.papers,.world,.notes) .botanical-decor img { max-width:45vw; opacity:var(--flower-mobile-opacity); }.about .botanical-right{right:-12%}.botanical-left{left:-16%}.botanical-right{right:-16%}
+ .opening-vignette { background:radial-gradient(ellipse 50% 50% at 50% 50%,rgb(14 14 14 / 0),#0e0e0e); }
+ .cinematic .home .scene-inner,.cinematic .fall .scene-inner { width:86%; }
+ .cinematic .home .hero-grid>div { left:0; top:30%; width:62%; }
+ .cinematic .home h1 { font-size:6.2vw; letter-spacing:0; }
+ .cinematic .home .intro { font-size:11px; line-height:1.5; margin:14px 0; white-space:normal; }
+ .cinematic .home .hero-grid .arch { left:auto;right:0;top:25%;width:36%;height:35svh;border-width:4px; }
+ .cinematic .home-bottom { bottom:7%; }.cinematic .home-bottom>a{font-size:12px}
+ .cinematic .fall h2{left:0;top:28%;font-size:32px}.cinematic .fall .scene-inner>p:not(.eyebrow){left:0;top:43%;font-size:14px;width:65%}
+ .cinematic .vinyl .scene-inner{width:82%;padding:135px 0 80px;min-height:100svh}
+ .cinematic .vinyl .player{display:flex;flex-direction:column;gap:28px;height:auto}
+ .deck{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:937/855}
+ .cinematic .player-info{position:relative;left:auto;top:auto;width:100%;min-height:0;padding:20px;border-radius:20px}
+ .cinematic .player-info .eyebrow{font-size:15px}.cinematic .player-info h3{font-size:21px}.music-source input{font-size:17px;min-height:40px}.music-source button{font-size:16px;min-height:34px}
+ .youtube-panel{right:8px;bottom:8px;width:min(360px,calc(100vw - 16px))}
+}
+
+/* September 22: shared typography, navigation and measured turntable alignment.
+   Main text uses a 21px floor; all headings share the same cream / gold pair. */
+:root { --text-size:21px; --heading-accent:#ddc194; --nav-height:max(100px,calc(116 * var(--design-unit))); }
+body { font-size:var(--text-size); }
+.cinematic :is(h1,h2,h3) { font-family:var(--font-heading); }
+.cinematic :is(h1,h2) { color:var(--cream); }
+.cinematic :is(h1,h2) em,.cinematic .home h1 em,.cinematic .fall h2 em { color:var(--heading-accent); font-style:italic; }
+.cinematic .home h1 { font-size:clamp(40px,calc(88 * var(--design-unit)),88px); }
+.cinematic .home .intro { font-size:max(var(--text-size),calc(24 * var(--design-unit))); line-height:1.5; white-space:normal; max-width:620px; }
+.cinematic .fall .scene-inner>p:not(.eyebrow) { font-size:max(var(--text-size),calc(24 * var(--design-unit))); }
+.cinematic :is(.about-copy p,.paper p,.paper .authors,.paper .meta,.photo-card p,.photo-card a,.polaroid figcaption,.values small,.text-link,.pill,summary,.contact,footer small,footer em,footer>a) { font-size:var(--text-size); line-height:1.5; }
+.cinematic .eyebrow,.cinematic .player-info .eyebrow { font-size:var(--text-size); letter-spacing:.08em; color:var(--gold); }
+.cinematic .player-info :is(#music-status,.music-picker,.time,.music-source input,.music-source button,.video-toggle) { font-size:var(--text-size); line-height:1.4; }
+.cinematic .player-info h3 { font-size:max(24px,calc(28 * var(--design-unit))); }
+.cinematic .player-info { max-height:calc(100svh - 315 * var(--design-unit) - 65px); overflow-y:auto; scrollbar-width:thin; scrollbar-color:#8d6b12 #211714; }
+.cinematic :is(.about,.papers,.world,.notes) .scene-inner { padding-top:calc(var(--nav-height) + 45px); }
+.opening-nav { height:var(--nav-height); padding-top:max(30px,calc(54 * var(--design-unit))); background:linear-gradient(#100c0ed9,#100c0e66); }
+.opening-nav nav { font-size:var(--text-size); gap:clamp(20px,3vw,60px); }
+.opening-nav .wordmark { font-size:max(26px,calc(36 * var(--design-unit))); }
+.opening-nav nav a:first-child { font-weight:400; border:0; }
+.opening-nav nav a:first-child::after { display:none; }
+.opening-nav nav a.active { font-weight:700; color:var(--gold); position:relative; }
+.opening-nav nav a.active::after { content:''; display:block; position:absolute; width:62px; height:13px; left:50%; top:100%; transform:translateX(-50%); background:url('assets/figma/nav-active.svg') center/100% 100% no-repeat; }
+.cinematic .timeline b { font-size:21px; }.cinematic .timeline a.active { color:var(--gold); font-weight:700; }
+.cinematic .timeline a.active b { font-weight:700; }
+.cinematic .scene-readout { font-size:21px; letter-spacing:.04em; right:210px; }
+.opening-active .opening-columns i:first-child,.opening-active .opening-columns i:last-child { top:calc(var(--nav-height) + 20px); height:calc(100svh - var(--nav-height) - 35px); width:calc((100svh - var(--nav-height) - 35px)/3); }
+/* Exact Figma needle image: frame 166:521 has a cropped inner image.
+   Position below is relative to the 727px record, including that crop offset. */
+.cinematic .needle { left:78.07%; right:auto; top:17.74%; width:46.36%; height:69.54%; transform-origin:50% 8.7%; }
+.cinematic .record { background-position:center; background-size:100% 100%; background-color:#0d0b08; }
+.music-queue { max-height:240px; scrollbar-width:thin; scrollbar-color:#8d6b12 #211714; }
+.motion-toggle { font-size:20px; }
+.cinematic .mini-player,.youtube-panel a { font-size:21px; }
+.queue-track { display:flex; align-items:center; gap:8px; }
+.music-queue .queue-select { flex:1; min-width:0; font-size:21px; overflow-wrap:anywhere; }
+.music-queue .queue-delete { flex:0 0 40px; width:40px; height:40px; padding:0; text-align:center; border-radius:50%; font:26px/1 var(--font-body); background:#cd878733; border-color:#7c414180; color:#f0a1a7; }
+.music-queue .queue-delete:hover { background:#a9434355; color:#fff; }
+.cinematic .home-bottom>a { font-size:21px; }
+@media(max-width:700px) {
+ :root { --nav-height:150px; }
+ .opening-nav { padding:48px 20px 12px; display:block; }
+ .opening-nav nav { display:flex; margin-top:14px; gap:22px; overflow-x:auto; padding-bottom:16px; white-space:nowrap; scrollbar-width:thin; scrollbar-color:#8d6b12 #211714; }
+ .opening-nav .wordmark { font-size:26px; }
+ .cinematic .timeline { padding:6px 14px; }
+ .cinematic .home .hero-grid>div { top:29%; width:61%; }
+ .cinematic .home h1 { font-size:clamp(30px,7.8vw,48px); }
+ .cinematic .home .intro { font-size:21px; line-height:1.35; }
+ .cinematic .home .hero-grid .arch { top:29%; }
+ .cinematic .fall h2 { font-size:36px; top:28%; }
+ .cinematic .fall .scene-inner>p:not(.eyebrow) { font-size:21px; top:46%; width:72%; }
+ .cinematic .vinyl .scene-inner { padding-top:calc(var(--nav-height) + 30px); }
+ .cinematic .player-info { max-height:none; overflow:visible; }
+ .cinematic .scene-readout { left:20px; right:180px; font-size:20px; }
+ .cinematic .scene-readout .journey-line { display:none; }
+ .cinematic .about-copy h2,.cinematic .section-heading h2,.cinematic .notes h2 { font-size:38px; }
+ .cinematic .papers .section-heading { flex-wrap:wrap; }
+ .cinematic .paper-grid { margin-top:36px; }
+ .cinematic .values { gap:10px; flex-wrap:wrap; }
+}
+/* September 25: personal wordmark and expanded biography. */
+.opening-nav .wordmark { display:flex; flex-direction:column; flex-shrink:0; gap:4px; line-height:1; }
+.brand-given { font:italic 500 clamp(30px,2.8vw,46px)/1 'Cormorant Garamond',Georgia,serif; letter-spacing:-.025em; color:#f3e5c9; }
+.brand-family { font:600 21px/1 'Cormorant Garamond',Georgia,serif; text-transform:uppercase; letter-spacing:.3em; color:var(--gold); }
+.opening-nav { padding-top:max(20px,calc(30 * var(--design-unit))); }
+.opening-nav nav { padding-top:13px; }
+.cinematic .about .scene-inner { align-items:start; padding-top:calc(var(--nav-height) + 55px); }
+.cinematic .about .portrait { margin-top:90px; padding-bottom:12px; }
+.presentation-videos { margin:35px 0; display:flex; flex-wrap:wrap; gap:14px 24px; }
+.presentation-videos h3 { flex-basis:100%; margin:0 0 8px; font-size:28px; }
+.presentation-videos a { font-size:21px; color:var(--heading-accent); border-bottom:1px solid #b9965355; }
+.presentation-videos a:hover { color:#fff0cd; }
+.letter blockquote.handwritten { margin:0 0 22px; font:italic 500 27px/1.4 'Cormorant Garamond',Georgia,serif; }
+.letter cite { display:block; font-size:21px; font-style:normal; }
+@media(max-width:1000px) and (min-width:701px) {
+ .brand-given { font-size:30px; }.opening-nav { padding-inline:5%; }.opening-nav nav { gap:16px; }
+}
+@media(max-width:700px) {
+ :root { --nav-height:180px; }
+ .opening-nav { padding-top:46px; }
+ .brand-given { font-size:36px; }.brand-family { font-size:21px; }
+ .opening-nav nav { margin-top:12px; padding-top:0; }
+ .cinematic .about .portrait { margin-top:0; }
+ .cinematic .about .scene-inner { padding-top:calc(var(--nav-height) + 30px); }
+ .cinematic .home .hero-grid>div,.cinematic .home .hero-grid .arch { top:31%; }
+}
+.youtube-fallback { display:block; color:var(--gold); font-size:21px; text-decoration:underline; margin-bottom:16px; }
+.youtube-fallback[hidden] { display:none; }
+
+/* Cleaned clipboard URLs stay visible for copying or checking. */
+.music-url-note { font-size:20px; line-height:1.4; color:var(--gold, #d7bf80); margin:10px 0 18px; overflow-wrap:anywhere; }
+.music-url-note[hidden] { display:none; }
