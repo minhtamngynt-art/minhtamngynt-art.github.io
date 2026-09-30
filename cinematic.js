@@ -50,7 +50,7 @@ function restoreLayers(index){layers[index].forEach(el=>{el.style.translate='0 0
 const flowerLayers=sections.map(s=>s.querySelector('.botanical-decor'));
 function animateFlowers(index,reading,t,mode){const el=flowerLayers[index];if(!el)return;const f=M.flowerState(index,reading,t,mode,reduced.matches);el.style.transform=`scale(${f.scale}) rotate(${f.rotate}deg)`;el.style.opacity=String(f.opacity)}
 function render(now){const {index,next,t,reading,l}=context(rendered),q=M.ease(t),shift=shiftFor(l,reading),isTransition=t>0&&index!==next;
-const key=`${index}:${isTransition}`;if(key!==visibleKey){visibleKey=key;sections.forEach((s,i)=>{s.style.visibility=i===index||(isTransition&&i===next)?'visible':'hidden';s.style.willChange=i===index||i===next?'transform,opacity':'auto'});restoreLayers(index);if(next!==index)restoreLayers(next)}
+const key=`${index}:${isTransition}`;if(key!==visibleKey){visibleKey=key;sections.forEach((s,i)=>{s.style.visibility=i===index||(isTransition&&i===next)?'visible':'hidden';const visible=i===index||(isTransition&&i===next);s.style.willChange=visible?'transform,opacity':'auto';inners[i].style.willChange=visible?'transform':'auto';const flowers=s.querySelector('.botanical-decor');if(flowers)flowers.style.willChange=visible?'transform,opacity':'auto'});restoreLayers(index);if(next!==index)restoreLayers(next)}
 const which=t>.56?next:index;if(active!==which){active=which;label.textContent=`0${active+1} / ${sections[active].dataset.name.toUpperCase()}`;sections.forEach((s,i)=>{s.inert=i!==active;s.style.pointerEvents=i===active?'auto':'none';s.setAttribute('aria-hidden',String(i!==active))});links.forEach((a,i)=>{a.classList.toggle('active',i===active);i===active?a.setAttribute('aria-current','location'):a.removeAttribute('aria-current')})}
 let outgoing=isTransition?M.camera(index,t,false,width,height):identity,incoming=isTransition?M.camera(index,t,true,width,height):identity;if(reduced.matches){outgoing={...identity,opacity:active===index?1:0};incoming={...identity,opacity:active===next?1:0}}
 sceneTransform(index,outgoing,shift);if(isTransition){sceneTransform(next,incoming,0);layerMotion(index,t,false);layerMotion(next,t,true)}
@@ -109,7 +109,7 @@ addEventListener('wheel',e=>{
  e.preventDefault();lastWheelAt=now;lastWheelDirection=direction;
  const to=M.clamp(step.to,0,total);
  if(reduced.matches){scrollTo({top:to,behavior:'instant'});rendered=to}
- else{wheelTween={from:step.from,to,time:now,duration:window.SceneSettings.wheelDuration||560};rendered=step.from;scrollTo({top:step.from,behavior:'instant'})}
+ else{wheelTween={from:step.from,to,time:now,duration:context(step.from).index===1?(window.SceneSettings.wheelFallDuration||700):(window.SceneSettings.wheelDuration||1000)};rendered=step.from;scrollTo({top:step.from,behavior:'instant'})}
  wake();
 },{passive:false});
 for(const type of ['touchstart','pointerdown','keydown'])addEventListener(type,()=>{wheelTween=null;lastWheelDirection=0},{passive:true});

@@ -3,7 +3,8 @@
    Home/Fall/Vinyl giữ điểm neo riêng; Notes neo trực tiếp trên lá thư.
    Quỹ đạo chỉ tác động huy hiệu, không đổi chữ hoặc bố cục. */
 window.SceneSettings = {
-  wheelDuration: 560, // mili giây/chuyển cảnh bằng chuột; điện thoại vẫn cuộn tự nhiên
+  wheelDuration: 1000, // mili giây/chuyển cảnh bằng chuột; điện thoại vẫn cuộn tự nhiên
+  wheelFallDuration: 700, // Fall vẫn là cảnh chuyển ngắn
   glow: 1.05, // cùng độ sáng nền cho toàn bộ hành trình
   flowerMotion: {
     3: {enter:.76,exit:1.48,turn:-6}, // About: tiến gần, tỏa ra rồi tan
