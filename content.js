@@ -25,15 +25,15 @@ const papers=[
   },
   {
     "title": "Ensemble of Convolutional Neural Networks for Classification of Breast Cancer in X-Ray Images",
-    "venue": "<strong>ESTAR</strong>",
+    "venue": "<strong>ETASR</strong>",
     "authors": "Nguyen Hoang Phuong, Ha Manh Toan, <strong>(Thanh) Minh Tam Nguyen</strong> et al.",
     "status": "Co-author · Submitted"
   },
   {
-    "title": "A Prototypical Interpretability Approach Using Earth Mover's Distance and Correlation for Medical Image Classification",
-    "venue": "<strong>AICI 2026</strong>",
+    "title": "Evaluation of EMD-Corr for Explainable Retinal Image Classification",
+    "venue": "<strong>AICI 2027</strong>",
     "authors": "<strong>(Thanh) Minh Tam Nguyen</strong>, Nguyen Hoang Phuong, Vladik Kreinovich",
-    "status": "First author · Submitted"
+    "status": "First author · Manuscript"
   }
 ];
 const photos=[
