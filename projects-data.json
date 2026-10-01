@@ -23,6 +23,7 @@
   },
   {
     "slug": "amd-oct",
+    "publication": {"status":"Forthcoming · Springer","book":"AI and Computational Intelligence","series":"Studies in Computational Intelligence, vol. 1303","expected":"Expected eBook publication: November 2026.","url":"https://link.springer.com/book/9783032391315"},
     "title": "AMD Diagnosis from OCT Images",
     "paper": "Performance Evaluation and Explainability Assessment of Deep Learning Architectures for AMD Diagnosis in OCT Images",
     "venue": "AICI 2026",
@@ -67,6 +68,7 @@
   },
   {
     "slug": "diabetic-retinopathy",
+    "publication": {"status":"Forthcoming · Springer","book":"Fuzzy Systems 60 Years Later: Past, Present, and Future","series":"Lecture Notes in Networks and Systems, vol. 2080","expected":"Expected eBook publication: October 2026.","url":"https://link.springer.com/book/9783032328304"},
     "title": "Diabetic Retinopathy Classification",
     "paper": "Study of Deep Learning Models for Diabetic Retinopathy Diagnosis",
     "venue": "Bachelor’s thesis · IFSA–NAFIPS 2025 / Springer 2026",

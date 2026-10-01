@@ -3,13 +3,15 @@ const papers=[
     "title": "Deep Learning for Detecting Diabetic Retinopathy",
     "venue": "<strong>IFSA-NAFIPS 2025</strong> · IFSA World Congress – NAFIPS Annual Meeting · Banff, Alberta, Canada · Aug 16–19, 2025 · Springer",
     "authors": "<strong>(Thanh) Minh Tam Nguyen</strong>, Nguyen Hoang Phuong",
-    "status": "First author · Presented"
+    "status": "First author · Presented · Forthcoming · Springer",
+    "publication": {"status":"Forthcoming · Springer","book":"Fuzzy Systems 60 Years Later: Past, Present, and Future","series":"Lecture Notes in Networks and Systems, vol. 2080","expected":"Expected eBook publication: October 2026.","url":"https://link.springer.com/book/9783032328304"}
   },
   {
     "title": "Performance Evaluation and Explainability Assessment of Deep Learning Architectures for Age-Related Macular Degeneration Diagnosis in OCT Images",
     "venue": "<strong>AICI 2026</strong> · 7th Intl. Conference on AI and Computational Intelligence · Hanoi, Vietnam · Jan 4–5, 2026 · Springer",
     "authors": "<strong>(Thanh) Minh Tam Nguyen</strong>, Nguyen Hoang Phuong, Vladik Kreinovich, Tri Nguyen, Kelly Cohen",
-    "status": "First author · Presented"
+    "status": "First author · Presented · Forthcoming · Springer",
+    "publication": {"status":"Forthcoming · Springer","book":"AI and Computational Intelligence","series":"Studies in Computational Intelligence, vol. 1303","expected":"Expected eBook publication: November 2026.","url":"https://link.springer.com/book/9783032391315"}
   },
   {
     "title": "Beyond Accuracy: Comparison of ResNet50 and GWN-Enhanced Models for Brain Tumor MRI Classification with LIME Visualization",
@@ -103,7 +105,7 @@ const photos=[
   }
 ];
 const featured=["ifsa2025.jpg","aici2026.jpg","cer.ictis.jpg","digitrans.jpg"];
-document.querySelector('#paper-grid').innerHTML=papers.map((p,i)=>'<article class="paper"><span class="meta">RESEARCH / 0'+(i+1)+'</span><h3>'+p.title+'</h3><p>'+p.venue+'</p><p class="authors">'+p.authors+'</p><p class="meta">'+p.status+'</p></article>').join('');
+document.querySelector('#paper-grid').innerHTML=papers.map((p,i)=>'<article class="paper"><span class="meta">RESEARCH / 0'+(i+1)+'</span><h3>'+p.title+'</h3><p>'+p.venue+'</p><p class="authors">'+p.authors+'</p><p class="meta">'+p.status+'</p>'+(p.publication?'<div class="publication-info"><p><em>'+p.publication.book+'</em><br>'+p.publication.series+'</p><p>'+p.publication.expected+'</p><a class="text-link" href="'+p.publication.url+'" target="_blank" rel="noopener noreferrer">Book page &#8599;</a></div>':'')+'</article>').join('');
 function card(p){return '<article class="photo-card"><button aria-label="View '+p.alt+'"><img src="'+p.src+'" alt="'+p.alt+'" loading="lazy"></button><p>'+p.alt+'</p></article>'};
 document.querySelector('#gallery').innerHTML=featured.map(f=>photos.find(p=>p.src.endsWith('/'+f))).filter(Boolean).map(card).join('');
 document.querySelector('#more-gallery').innerHTML=photos.filter(p=>!featured.some(f=>p.src.endsWith('/'+f))).map(card).join('');
