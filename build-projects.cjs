@@ -11,7 +11,7 @@ const cards=projects.map(p=>`<article class="research-card${p.latest?' research-
 const fragment=`<div class="selected-research"><div class="research-intro"><h3>From predictions<br>to <em>explanations.</em></h3><p>My research has expanded from classification and class imbalance to reliability, shortcut learning, and the development of patch-based explanation methods.</p></div>
 <div class="research-project-grid">${cards[0]}</div>
 <ol class="research-path" aria-label="Development of my research focus">${stages.map(([slug,title],i)=>`<li${slug==='emd-corr'?' class="research-path-latest"':''}><span>0${i+1}${slug==='emd-corr'?' · Latest':''}</span><strong>${title}</strong><small>${esc(projects.find(p=>p.slug===slug).title)}</small></li>`).join('')}</ol>
-<div class="research-project-grid">${cards.slice(1).join('\n')}</div><p class="research-comparison-note">Different datasets and evaluation protocols: project scores are not a direct ranking of research progress.</p></div>`;
+<div class="research-project-grid">${cards.slice(1).join('\n')}</div></div>`;
 let index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 if(!index.includes('<!-- SELECTED_PROJECTS_START -->'))throw Error('Missing project insertion markers in index.html');
 index=index.replace(/<!-- SELECTED_PROJECTS_START -->[\s\S]*?<!-- SELECTED_PROJECTS_END -->/,`<!-- SELECTED_PROJECTS_START -->\n${fragment}\n<!-- SELECTED_PROJECTS_END -->`);
